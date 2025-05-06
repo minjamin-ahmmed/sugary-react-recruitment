@@ -1,21 +1,80 @@
+import axios from "axios";
+import { AlertCircle, CheckCircle } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("Login Data:", data);
-  
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    const body = {
+      UserName: data.UserName,
+      Password: data.Password,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://sugarytestapi.azurewebsites.net/AdminAccount/Login",
+        body,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Login successful:", response.data);
+      toast.success("Login successful!", {
+        position: "top-center",
+        icon: <CheckCircle className="text-green-500" />,
+        style: {
+          borderRadius: "12px",
+          background: "#1a1a1a",
+          color: "#fff",
+          fontSize: "16px",
+          padding: "14px 20px",
+        },
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      reset();
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("Login failed. Please check your credentials.", {
+        position: "top-center",
+        icon: <AlertCircle className="text-red-500" />,
+        style: {
+          borderRadius: "12px",
+          background: "#1a1a1a",
+          color: "#fff",
+          fontSize: "16px",
+          padding: "14px 20px",
+        },
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      console.error("Login failed:", error.response?.data || error.message);
+    }
   };
 
   return (
     <div className="w-11/12 lg:w-7/12 mx-auto flex items-center justify-center min-h-screen">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-zinc-200">
         <h2 className="text-3xl font-semibold text-center text-zinc-950 mb-4">
           Login
         </h2>
@@ -24,71 +83,45 @@ const Login = () => {
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Email Input */}
-          <div>
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-zinc-600"
-            >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-zinc-700 mb-1">
               Email
             </label>
             <input
               type="email"
-              id="email"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                  message: "Please enter a valid email",
-                },
-              })}
-              className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-950 transition ${
-                errors.email ? "border-red-500" : "border-zinc-300"
-              }`}
-              placeholder="Enter your email"
+              {...register("UserName", { required: "Email is required" })}
+              className="w-full px-4 py-2 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-zinc-950"
             />
-            {errors.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
+            {errors.UserName && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.UserName.message}
+              </p>
             )}
           </div>
 
-          {/* Password Input */}
-          <div>
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-zinc-600"
-            >
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-zinc-700 mb-1">
               Password
             </label>
             <input
               type="password"
-              id="password"
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-              })}
-              className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-950 transition ${
-                errors.password ? "border-red-500" : "border-zinc-300"
-              }`}
-              placeholder="Enter your password"
+              {...register("Password", { required: "Password is required" })}
+              className="w-full px-4 py-2 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-zinc-950"
             />
-            {errors.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
+            {errors.Password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.Password.message}
+              </p>
             )}
           </div>
 
-          {/* Submit Button */}
-          <div>
-            <button
-              type="submit"
-              className="w-full bg-zinc-950 text-white px-6 py-2 rounded-full font-medium hover:bg-zinc-800 transition-all duration-200 ease-in-out transform hover:scale-95"
-            >
-              Login
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-zinc-950 text-white py-2 rounded-full font-medium hover:scale-95 active:scale-90 transition cursor-pointer"
+          >
+            {isSubmitting ? "Logging in..." : "Login"}
+          </button>
         </form>
       </div>
     </div>
