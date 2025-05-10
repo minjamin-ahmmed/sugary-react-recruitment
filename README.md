@@ -1,12 +1,72 @@
-# React + Vite
+# Sugary React Recruitment Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A polished and fully functional React application built as part of the Sugary recruitment task.
 
-Currently, two official plugins are available:
+## 🚀 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+> **[🔗 Live Site](https://your-live-site-link.com)** — _(Replace with your deployed site URL)_
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📋 Task Overview
+
+Build a React application with the following core features:
+
+### 🔐 Authentication System
+
+- **Login functionality** with secure token storage.
+- **Refresh token handling** to maintain authenticated sessions.
+
+### 📊 Dashboard Page
+
+- A **dashboard** that is only accessible after login.
+- Displays a **list of materials** fetched from an external API.
+- Implements **lazy loading** to improve performance and user experience.
+
+### 💅 UI/UX and Design
+
+- Modern, clean, and responsive UI.
+- Built with **Tailwind CSS** for fast, scalable styling.
+- Thoughtful component design and UX-focused interactions.
+
+---
+
+## 🛠️ Technologies Used
+
+- **React.js** – Frontend framework
+- **React Router DOM** – Routing
+- **Axios** – HTTP client
+- **Tailwind CSS** – Utility-first CSS framework
+- **React Toastify** – User-friendly toast notifications
+- **Lucide Icons** – Icon library
+- **Custom Lazy Loader** – For efficient scroll loading
+- **Skeleton Loader** – For better loading UX
+
+---
+
+## 📷 Preview
+
+![Dashboard Screenshot](./public/dashboard-screenshot.png)  
+_Responsive dashboard view showing materials, statistics, and tags._
+
+---
+
+## 📂 Project Structure
+
+```bash
+src/
+├── Components/           # Shared UI components (SkeletonLoader, etc.)
+├── Pages/
+│   ├── Dashboard/        # Main dashboard logic & MaterialCard
+│   ├── Home/             # Home page (public)
+│   └── Login/            # Login page & form logic
+├── routes/               # Route configuration and private route handling
+├── utils/
+│   └── encodeFilter.js   # Utility for encoding API filters
+├── api/                  # Axios instance with interceptors
+├── assets/               # Static files and media
+├── App.jsx               # Main App component
+├── main.jsx              # ReactDOM rendering
+├── App.css               # Global styles
+└── index.css             # Tailwind base styles
+```
