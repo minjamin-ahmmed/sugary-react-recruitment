@@ -91,8 +91,6 @@ const Login = () => {
       );
 
       storeTokens(response.data);
-
-      console.log("Login successful:", response.data);
       showSuccessToast();
       reset();
       navigate("/dashboard");

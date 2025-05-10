@@ -4,7 +4,7 @@ A polished and fully functional React application built as part of the Sugary re
 
 ## 🚀 Live Demo
 
-> **[🔗 Live Site](https://your-live-site-link.com)** — _(Replace with your deployed site URL)_
+> **[🔗 Live Site](https://authentication-system-with-react.netlify.app/)** 
 
 ---
 
@@ -46,10 +46,24 @@ Build a React application with the following core features:
 
 ## 📷 Preview
 
-![Dashboard Screenshot](./public/dashboard-screenshot.png)  
-_Responsive dashboard view showing materials, statistics, and tags._
+### 🏠 Home Page  
+![Home Page Screenshot](./assets/home-page.png)  
+_Modern responsive homepage featuring navigation, hero section, and key features._
 
 ---
+
+### 🔐 Login Page  
+![Login Page Screenshot](./assets/login-page.png)  
+_Clean login form with secure authentication and responsive layout._
+
+---
+
+### 📊 Dashboard Page  
+![Dashboard Screenshot](./assets/dashboard.png)  
+_Interactive dashboard displaying materials, statistics, and filterable tags._
+
+---
+
 
 ## 📂 Project Structure
 
