@@ -47,19 +47,19 @@ Build a React application with the following core features:
 ## 📷 Preview
 
 ### 🏠 Home Page  
-![Home Page Screenshot](./assets/home-page.png)  
+![Home Page Screenshot](./public/assets/home-page.png)  
 _Modern responsive homepage featuring navigation, hero section, and key features._
 
 ---
 
 ### 🔐 Login Page  
-![Login Page Screenshot](./assets/login-page.png)  
+![Login Page Screenshot](./public/assets/login-page.png)  
 _Clean login form with secure authentication and responsive layout._
 
 ---
 
 ### 📊 Dashboard Page  
-![Dashboard Screenshot](./assets/dashboard.png)  
+![Dashboard Screenshot](./public/assets/dashboard.png)  
 _Interactive dashboard displaying materials, statistics, and filterable tags._
 
 ---
