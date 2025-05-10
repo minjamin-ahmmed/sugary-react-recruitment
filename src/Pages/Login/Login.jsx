@@ -1,9 +1,9 @@
-import axios from "axios";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axiosInstance from "../../api/axiosInstance";
 
 const Login = () => {
   const {
@@ -15,6 +15,64 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  const storeTokens = (responseData) => {
+    localStorage.setItem("accessToken", responseData.Token);
+    localStorage.setItem("refreshToken", responseData.RefreshToken);
+
+    if (responseData.AccessTokenExpiresAt) {
+      localStorage.setItem(
+        "accessTokenExpiresAt",
+        responseData.AccessTokenExpiresAt
+      );
+    }
+    if (responseData.RefreshTokenExpiresAt) {
+      localStorage.setItem(
+        "refreshTokenExpiresAt",
+        responseData.RefreshTokenExpiresAt
+      );
+    }
+  };
+
+  const showSuccessToast = () => {
+    toast.success("Login successful!", {
+      position: "top-center",
+      icon: <CheckCircle className="text-green-500" />,
+      style: {
+        borderRadius: "12px",
+        background: "#1a1a1a",
+        color: "#fff",
+        fontSize: "16px",
+        padding: "14px 20px",
+      },
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
+  const showErrorToast = (
+    message = "Login failed. Please check your credentials."
+  ) => {
+    toast.error(message, {
+      position: "top-center",
+      icon: <AlertCircle className="text-red-500" />,
+      style: {
+        borderRadius: "12px",
+        background: "#1a1a1a",
+        color: "#fff",
+        fontSize: "16px",
+        padding: "14px 20px",
+      },
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
   const onSubmit = async (data) => {
     const body = {
       UserName: data.UserName,
@@ -22,7 +80,7 @@ const Login = () => {
     };
 
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         "https://sugarytestapi.azurewebsites.net/AdminAccount/Login",
         body,
         {
@@ -32,42 +90,22 @@ const Login = () => {
         }
       );
 
+      storeTokens(response.data);
+
       console.log("Login successful:", response.data);
-      toast.success("Login successful!", {
-        position: "top-center",
-        icon: <CheckCircle className="text-green-500" />,
-        style: {
-          borderRadius: "12px",
-          background: "#1a1a1a",
-          color: "#fff",
-          fontSize: "16px",
-          padding: "14px 20px",
-        },
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      showSuccessToast();
       reset();
       navigate("/dashboard");
     } catch (error) {
-      toast.error("Login failed. Please check your credentials.", {
-        position: "top-center",
-        icon: <AlertCircle className="text-red-500" />,
-        style: {
-          borderRadius: "12px",
-          background: "#1a1a1a",
-          color: "#fff",
-          fontSize: "16px",
-          padding: "14px 20px",
-        },
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      let errorMessage = "Login failed. Please check your credentials.";
+
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      showErrorToast(errorMessage);
       console.error("Login failed:", error.response?.data || error.message);
     }
   };
@@ -89,7 +127,13 @@ const Login = () => {
             </label>
             <input
               type="email"
-              {...register("UserName", { required: "Email is required" })}
+              {...register("UserName", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
               className="w-full px-4 py-2 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-zinc-950"
             />
             {errors.UserName && (
@@ -105,7 +149,13 @@ const Login = () => {
             </label>
             <input
               type="password"
-              {...register("Password", { required: "Password is required" })}
+              {...register("Password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              })}
               className="w-full px-4 py-2 border border-zinc-300 rounded focus:outline-none focus:ring-2 focus:ring-zinc-950"
             />
             {errors.Password && (
@@ -118,7 +168,9 @@ const Login = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-zinc-950 text-white py-2 rounded-full font-medium hover:scale-95 active:scale-90 transition cursor-pointer"
+            className={`w-full bg-zinc-950 text-white py-2 rounded-full font-medium hover:scale-95 active:scale-90 transition ${
+              isSubmitting ? "opacity-70 cursor-not-allowed" : "cursor-pointer"
+            }`}
           >
             {isSubmitting ? "Logging in..." : "Login"}
           </button>
